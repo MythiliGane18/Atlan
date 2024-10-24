@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service
+  labels:
+    app: ecommerce
+    tier: database
+spec:
+  ports:
+    - port: 27017
+  clusterIP: None
+  selector:
+    app: ecommerce
+    tier: database

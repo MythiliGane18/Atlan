@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+  labels:
+    app: ecommerce
+    tier: messaging
+spec:
+  serviceName: "rabbitmq"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ecommerce
+      tier: messaging
+  template:
+    metadata:
+      labels:
+        app: ecommerce
+        tier: messaging
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3-management
+        ports:
+        - containerPort: 5672
+        - containerPort: 15672
+        envFrom:
+        - configMapRef:
+            name: rabbitmq-configmap
+        - secretRef:
+            name: rabbitmq-secret
+        volumeMounts:
+        - name: rabbitmq-persistent-storage
+          mountPath: /var/lib/rabbitmq
+  volumeClaimTemplates:
+  - metadata:
+      name: rabbitmq-persistent-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 5Gi

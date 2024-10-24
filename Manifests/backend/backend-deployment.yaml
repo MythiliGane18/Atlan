@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: ecommerce
+    tier: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ecommerce
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: ecommerce
+        tier: backend
+    spec:
+      containers:
+      - name: backend
+        image: node:16-alpine
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: backend-configmap
+        - secretRef:
+            name: backend-secret
